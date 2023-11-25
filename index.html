@@ -5,6 +5,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <script src="https://cdn.jsdelivr.net/npm/dayjs@1.11.10/dayjs.min.js"></script>
   <link href="https://fonts.googleapis.com/css?family=IBM+Plex+Sans:400,400i,700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.11.2/css/all.min.css">
   <link rel="stylesheet" href="./assets/style.css" />
@@ -17,8 +18,7 @@
    </header>
 
    <main class="flex-row justify-space-between">
-    <div class="col-12 col-md-4">
-
+    <div class="col-12 col-md-3">
       <div class="card">
         <h3 class="card-header">Search for a City:</h3>
         <form id="city-form" class="card-body">
@@ -26,9 +26,8 @@
           <button type="submit" class="btn">Search</button>
         </form>
       </div>
-
+      <hr>
       <div class="card">
-        <h3 class="card-header">previous searches will show up under here</h3>
         <div id="previous-searches" class="card-body">
           <button class="btn-prev">prev search</button>
           <button class="btn-prev">prev search</button>   
@@ -37,14 +36,26 @@
       </div>
     </div>
 
-    <div class="col-12 col-md-8">
-      <h2 class="subtitle">Name of City
-        current search 5 day forecast<span id="repo-search-term"></span></h2>
-      <div id="forecast-container" class="list-group"></div>
-    </div>
-  </main>
+    <div class="col-12 col-md-9">
+      <h2 class="subtitle">Weather for <span id="city-name" id="now"></span></h2>
+      <div class="weather-info">
+        <p>Temp: <span id="temperature"></span></p>
+        <p>Wind: <span id="wind-speed"></span></p>
+        <p>Humidity: <span id="humidity"></span></p>
+        <p>Weather Description: <span id="weather-description"></span></p>
+      </div>
+      <hr>
+      <div class="col-12 col-md-3"></div>
+    <h3 class="forecast-container">5-Day Forecast:</h3>
+        <p> <span id="forecast-date"></span></p>
+        <p> <span id="forecast-temperature-fahrenheit">Temp:</span></p>
+        <p> <span id="forecast-wind-speed">Wind:</span></p>
+        <p> <span id="forecast-humidity">Humidity:</span></p>
+     </div>
+</main>
 
   <script src="./assets/script.js"></script>
+  
 </body>
 
 </html>
