@@ -1,14 +1,93 @@
 
 
-var WeatherAPIKey = a749e0f3c96ca48cd42ff8ccf52c401a
+var cityName = "";
 
-var cityName;
+// Add an event listener for the form submission
 
-var queryURL = http: "//api.openweathermap.org/geo/1.0/direct?q="{cityName}&appid="WeatherAPIKey";
+document.getElementById("city-form").addEventListener("submit", function (event) {
+    event.preventDefault(); // Prevent the form from submitting
+    cityName = document.getElementById("cityname").value;
+    getLatLong(cityName); // Call a function to fetch lat and long
+});
 
-fetch(queryURL)
+function getLatLong(cityName) {
+    var queryURL = `https://api.openweathermap.org/geo/1.0/direct?q=${cityName}&appid=a749e0f3c96ca48cd42ff8ccf52c401a`;
 
-response 
+    fetch(queryURL)
+        .then(function (response) {
+            return response.json();
+        })
+        .then(function (data) {
+            var lat = data[0].lat;
+            var lon = data[0].lon;
+            // Call a function to fetch weather data using lat and lon
+            getWeatherData(lat, lon);
+        })
+        .catch(function (error) {
+            console.log("Error: " + error);
+        });
+}
+function getWeatherData(lat, lon) {
+    var weatherAPIKey = "a749e0f3c96ca48cd42ff8ccf52c401a"; // Replace with your OpenWeatherMap API key
+
+    // Construct the URL for fetching weather data
+    var weatherURL = `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${weatherAPIKey}&units=imperial`;
+
+    //fetch the weather data
+    fetch(weatherURL)
+        .then(function (response) {
+            return response.json();
+        })
+        .then(function (data) {
+            // Handle and display the weather data here
+            displayWeatherData(data);
+        })
+        .catch(function (error) {
+            console.log("Error fetching weather data: " + error);
+        });
+}
+
+function displayWeatherData(data, forecastData) {
+    // Extract and display relevant weather information
+    var cityName = data.name;
+    var now = dayjs().format('MM/D/YY');
+   //console.log(now.format());
+    var temperatureFahrenheit = data.main.temp;
+    var humidity = data.main.humidity;
+    var windSpeed = data.wind.speed;
+    var weatherDescription = data.weather[0].description;
+
+    // Update the HTML elements with the weather data
+    document.getElementById("city-name").textContent = cityName + (now);
+    document.getElementById("temperature").textContent = temperatureFahrenheit + "°F"
+    document.getElementById("humidity").textContent = humidity + "%";
+    document.getElementById("wind-speed").textContent = windSpeed +  "MPH";
+    document.getElementById("weather-description").textContent = weatherDescription;
+}
+
+// Call the getLatLong function when the form is submitted
+document.getElementById("city-form").addEventListener("submit", function (event) {
+    event.preventDefault();
+    cityName = document.getElementById("cityname").value;
+    getLatLong(cityName);
+})
+
+//display 5 day forecast
+var forecastContainer = document.getElementById("forecast-container");
+forecastContainer.innerHTML = "";  //clear previous forecast info
+
+
+for (var i = 1; i <= 5; i++) {
+    var forecastItem = forecastData[i];
+    var forecastDate = dayjs.unix(forecastItem.dt).format('MM/D/YY');
+    var forecastTemperatureFahrenheit = forecastItem.main.temp;
+    var forecastWindSpeed = forecastItem.wind.speed;
+    var forecastHumidity = forecastItem.main.humidity;
+    var forecastWeatherDescription = forecastItem.weather[0].description;
+
+forecastContainer.appendChild(forecastData);
+}
+
 
 //event listener for click city search
 //function? for converting to lat and long of city
