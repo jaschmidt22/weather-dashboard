@@ -1,22 +1,14 @@
-:root {
-    --primary: white;
-    --secondary: #3281a8;
-    --tertiary: #939696;
-    --light-dark: #325ea8;
-    --dark: black;
-    --border-radius: 0.3rem;
-  }
   
   * {
     box-sizing: border-box;
   }
   
   body {
-    background-color: var(--primary);
+    background-color: white;
     margin: 0;
     padding: 0;
     font-family: Arial, Helvetica, sans-serif;
-    color: var(--dark);
+    color: black;
     line-height: 1.5;
     font-size: 20px;
   }
@@ -29,7 +21,7 @@
   h6 {
     font-weight: 700;
     margin: 0;
-    color: var(--dark);
+    color: black;
     line-height: 1.25;
   }
   
@@ -49,17 +41,17 @@
     width: 100%;
     display: block;
     margin: 5px 0;
-    border-radius: var(--border-radius);
-    color: var(--primary);
+    border-radius: 0.3rem;
+    color: white;
     border: none;
     outline: none;
-    background-color: var(--secondary);
+    background-color: #3281a8;
     transform: translate(-1px, -1px);
   }
   
   .btn:hover {
-    color: var(--primary);
-    background-color: var(--tertiary);
+    color: white;
+    background-color: #939696;
     transform: translate(0, 0);
   }
   
@@ -74,24 +66,41 @@
     width: 100%;
     display: block;
     margin: 5px 0;
-    border-radius: var(--border-radius);
-    color: var(--dark);
+    border-radius: 0.3rem;
+    color: black;
     border: none;
     outline: none;
-    background-color: var(--tertiary);
+    background-color: #939696;
     transform: translate(-1px, -1px);
 }
 
-.btn-prev:hover {
-    color: var(--dark);
-    background-color: var(--primary);
+  .btn-prev:hover {
+    color: black;
+    background-color: white;
     transform: translate(0, 0);
 }
 
+  .forecast-container {
+    font-size: 18px;
+  }
+
+  .row {
+    font-size: 10px;
+  }
+  
+  .forecast-item {
+    background-color: #325ea8; 
+    color: white;
+    border: 1px solid black; 
+    border-radius: 0.3rem;
+    padding: 10px; 
+    
+  }
+  
   .hero {
     padding: 3% 4%;
-    background-color: var(--light-dark);
-    color: var(--primary);
+    background-color: #325ea8;
+    color: white;
   }
   
   .hero p {
@@ -101,8 +110,8 @@
   .app-title {
     font-size: 30px;
     text-align: center;
-    background-color: var(--light-dark);
-    color: var(--primary);
+    background-color: #325ea8;
+    color: white;
     padding: 0 10px
 
   }
@@ -115,21 +124,21 @@
   .list-item {
     margin-bottom: 10px;
     padding: 1.5%;
-    border-radius: var(--border-radius);
-    background-color: var(--light-dark);
-    color: var(--primary);
+    border-radius: 0.3rem;
+    background-color: #325ea8;
+    color: white;
     text-decoration: none;
   }
   
   .list-item:hover {
-    background-color: var(--dark);
+    background-color: black;
   }
   
   .status-icon {
     padding: 2px 5px;
     margin: 0 5px;
-    background-color: rgba(255, 255, 255, 1);
-    border-radius: var(--border-radius);
+    background-color: white;
+    border-radius: 0.3rem;
   }
   
   .icon-danger {
@@ -143,12 +152,12 @@
   /* CARDS */
   .card {
     margin: 0 0 20px 0;
-    border-radius: var(--border-radius);
+    border-radius: 0.3rem;
   }
   
   .card-header {
-    color: var(--dark);
-    background-color: var(--primary);
+    color: black;
+    background-color: white;
     padding: 2.5%;
     border-radius: calc(0.18rem - 1px) calc(0.18rem - 1px) 0 0;
   }
@@ -174,8 +183,8 @@
     padding: 3%;
     margin: 5px 0;
     font-size: 1.2rem;
-    border: 2px solid var(--dark);
-    border-radius: var(--border-radius);
+    border: 2px solid black;
+    border-radius: 0.3rem;
   }
   
   /* HEIGHT / WIDTH UTILS */
