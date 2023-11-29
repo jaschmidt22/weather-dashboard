@@ -1,52 +1,17 @@
 
+document.addEventListener("DOMContentLoaded", function () {
 
 var cityName = "";
-//store prev searched cities
-var previouslySearchedCities = JSON.parse(localStorage.getItem("previouslySearchedCities")) || []; 
 
-var savedCities = localStorage.getItem("previouslySearchedCities");  //load prev searches from local storage
-if (savedCities) {
-    previouslySearchedCities = JSON.parse(savedCities);
-}
-
-// Function to save list of previously searched cities to local storage
-function saveCitiesToLocalStorage() {
-    localStorage.setItem("previouslySearchedCities", JSON.stringify(previouslySearchedCities));
-}
-
-function addCityToPreviouslySearched(cityName) {
-    previouslySearchedCities.push(cityName);
-    saveCitiesToLocalStorage();
-    updatePreviouslySearchedButtons();
-}
-    
-//function to update HTML with buttons of previous searches
-function updatePreviouslySearchedButtons() {
-    var previousSearchesContainer = document.getElementById("previous-searches");
-    previousSearchesContainer.innerHTML = "";   
-    
-    previouslySearchedCities.forEach(function (cityName) {
-        var button = document.createElement("button");
-        button.textContent = cityName;
-        button.classList.add("btn-prev");
-        button.addEventListener("click", function () {
-            getLatLong(cityName);   //when button is clicked fetch weather info
-        });
-        previousSearchesContainer.appendChild(button);
-    });
-}
-    
-addCityToPreviouslySearched(cityName);
-    console.log(cityName);
-    
 //event listener for the form submission
 document.getElementById("city-form").addEventListener("submit", function (event) {
     event.preventDefault(); // Prevent the form from submitting
     cityName = document.getElementById("cityname").value;
     getLatLong(cityName); // Call a function to fetch lat and long
+    getLatLongForForecast(cityName);
 });
 
-
+//function to get latitutde and longitude of city name
 function getLatLong(cityName) {
     var queryURL = `https://api.openweathermap.org/geo/1.0/direct?q=${cityName}&appid=a749e0f3c96ca48cd42ff8ccf52c401a`;
 
@@ -57,7 +22,7 @@ function getLatLong(cityName) {
         .then(function (data) {
             var lat = data[0].lat;
             var lon = data[0].lon;
-            // Call a function to fetch weather data using lat and lon
+            // Call a function to fetch weather data using lat and long
             getWeatherData(lat, lon);
         })
         .catch(function (error) {
@@ -65,10 +30,9 @@ function getLatLong(cityName) {
         });
 }
 function getWeatherData(lat, lon) {
-    var weatherAPIKey = "a749e0f3c96ca48cd42ff8ccf52c401a"; //API key
-
-    // Construct the URL for fetching weather data
-    var weatherURL = `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${weatherAPIKey}&units=imperial`;
+   
+    // URL for fetching weather data
+   var weatherURL = `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=a749e0f3c96ca48cd42ff8ccf52c401a&units=imperial`;     
 
     //fetch the weather data
     fetch(weatherURL)
@@ -106,88 +70,110 @@ function displayWeatherData(data) {
 document.getElementById("city-form").addEventListener("submit", function (event) {
     event.preventDefault();
     cityName = document.getElementById("cityname").value;
-    getLatLong(cityName);
+    
+    getLatLong(cityName);   //call function to fetch current weather
+    getLatLongForForecast(cityName).then(function (coordinates) {  //call function for 5 day
+        getFiveDayForecast(coordinates.lat, coordinates.lon);
+
+    });
 })
+
+function getLatLongForForecast(cityName) {
+    var queryURL = `https://api.openweathermap.org/geo/1.0/direct?q=${cityName}&appid=a749e0f3c96ca48cd42ff8ccf52c401a`;
+
+    return fetch(queryURL)
+        .then(function (response) {
+            return response.json();
+        })
+        .then(function (data) {
+            var lat = data[0].lat;
+            var lon = data[0].lon;
+            return { lat, lon };
+        })
+        .catch(function (error) {
+            console.log("Error: " + error); // log any error
+        });
+}
 
 //get 5 day forecast
 function getFiveDayForecast(lat, lon) {
-    var weatherAPIKey = "a749e0f3c96ca48cd42ff8ccf52c401a";
-
-    var forecastURL= `https://api.openweathermap.org/data/2.5/forecast?lat=${lat}&lon=${lon}&appid=${weatherAPIKey}&units=imperial`;
-
-
+  
+    var forecastURL= `https://api.openweathermap.org/data/2.5/forecast?lat=${lat}&lon=${lon}&cnt=0&appid=a749e0f3c96ca48cd42ff8ccf52c401a&units=imperial`;      //5 day
+    
     // fetch 5 day forecast
     fetch(forecastURL)
         .then(function (response) {
             return response.json();
         })
-        .then(function (data) {
+        .then(function (forecastData) {
             displayFiveDayForecast(forecastData);
+            console.log(forecastData);
         })
         .catch(function (error) {
-            console.loge("error fetching 5 day forecast data:" + error);   //log any errors 
+            console.log("error fetching 5 day forecast data:" + error);   //log any errors 
         });
     }
 function displayFiveDayForecast(forecastData) {   //function to display 5 day forecast 
-    for (var i = 0; i < 5; i++) {
-        var forecastItem = forecastData[i];  
-        var dateID = "forecast-date-" + i;
-        var tempID = "forecast-temperature-fahrenheit-" + i;
-        var windID = "forecast-wind-speed-" + i;
-        var humidityID = "forecast-humidity-" + i;
+    if (forecastData.list && forecastData.list.length > 0) {
+        for (var i = 0; i < 5; i++) {
+            var forecastItem = forecastData.list[i];  
+            var dateID = "forecast-date-" + i;
+            var tempID = "forecast-temperature-fahrenheit-" + i;
+            var windID = "forecast-wind-speed-" + i;
+            var humidityID = "forecast-humidity-" + i;
+        
+            if (forecastItem) {
+                var forecastDate = dayjs.unix(forecastItem.dt).format('MM/D/YY');
+                var forecastTemperatureFahrenheit = forecastItem.main.temp;
+                var forecastWindSpeed = forecastItem.wind.speed;
+                var forecastHumidity = forecastItem.main.humidity;
 
-        var forecastDate = dayjs.unix(forecastItem.dt).format('MM/D/YY');
-        var forecastTemperatureFahrenheit = forecastItem.main.temp;
-        var forecastWindSpeed = forecastItem.wind.speed;
-        var forecastHumidity = forecastItem.main.humidity;
-
-        //update HTML elements with forecast data
-        document.getElementById(dateID).textContext = "Date: " + forecastDate;
-        document.getElementById(tempID).textContent = "Temp: " + forecastTemperatureFahrenheit + "°F";
-        document.getElementById(windID).textContent = "Wind: " +  forecastWindSpeed + " MPH";
-        document.getElementById(humidityID).textContent = "Humidity:" + forecastHumidity + "%";
+            //update HTML elements with forecast data
+                document.getElementById(dateID).textContent = "Date: " + forecastDate;
+                document.getElementById(tempID).textContent = "Temp: " + forecastTemperatureFahrenheit + "°F";
+                document.getElementById(windID).textContent = "Wind: " +  forecastWindSpeed + " MPH";
+                document.getElementById(humidityID).textContent = "Humidity:" + forecastHumidity + "%";
     }
 }
+} else {
+    console.log("No forecast data available.");
+}
 
+addCityToPreviouslySearched(cityName);
+//store prev searched cities
+var previouslySearchedCities = [];
 
+var savedCities = localStorage.getItem("previouslySearchedCities");  //load prev searches from local storage
 
+if (savedCities) {
+    previouslySearchedCities = JSON.parse(savedCities);
+}
 
-   
-  
- 
-   
-   
-    //var forecastWeatherDescription = forecastItem.weather[0].description;
+// Function to save list of previously searched cities to local storage
+function saveCitiesToLocalStorage() {
+    localStorage.setItem("previouslySearchedCities", JSON.stringify(previouslySearchedCities));
+}
 
-//forecastContainer.appendChild(forecastData);
-
-//add city to list of previous searches
-
-
-//event listener for click city search
-//function? for converting to lat and long of city
-//function? for date
-//fetch forecast for current temp wind and humidity
-//fetch next 5 days forecast with temp wind and humidity
-//weather icon
-//store search in local storage
-//button populates below search box with name of city and link to 5 day forecast
-
-
-
-
-
-
-
-
-
-
-//GIVEN a weather dashboard with form inputs
-//WHEN I search for a city
-//THEN I am presented with current and future conditions for that city and that city is added to the search history
-//WHEN I view current weather conditions for that city
-//THEN I am presented with the city name, the date, an icon representation of weather conditions, the temperature, the humidity, and the the wind speed
-//WHEN I view future weather conditions for that city
-//THEN I am presented with a 5-day forecast that displays the date, an icon representation of weather conditions, the temperature, the wind speed, and the humidity
-//WHEN I click on a city in the search history
-//THEN I am again presented with current and future conditions for that city
+function addCityToPreviouslySearched(cityName) {
+    previouslySearchedCities.push(cityName);
+    saveCitiesToLocalStorage();
+    updatePreviouslySearchedButtons();
+}
+    
+//function to update HTML with buttons of previous searches
+function updatePreviouslySearchedButtons() {
+    var previousSearchesContainer = document.getElementById("previous-searches");
+    previousSearchesContainer.innerHTML = "";   
+    
+    previouslySearchedCities.forEach(function (cityName) {
+        var button = document.createElement("button");
+        button.textContent = cityName;
+        button.classList.add("btn-prev");
+        button.addEventListener("click", function () {
+            getLatLong(cityName);   //when button is clicked fetch weather info
+        });
+        previousSearchesContainer.appendChild(button);
+    });
+}
+}
+});
