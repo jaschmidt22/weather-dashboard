@@ -13,7 +13,7 @@ https://jaschmidt22.github.io/weather-dashboard/
 
 ## Credits
 
-Throughout the making of this project, I frequently referenced https://openweathermap.org/api and my class repository ASU-VIRT-FSF-PT-10-2023-U-LOLC. I also referenced Google, W3Schools, MDN Webdocs, Day.js, Bootstrap, and ChatGPT.
+Throughout the making of this project, I frequently referenced https://openweathermap.org/api and my class repository ASU-VIRT-FSF-PT-10-2023-U-LOLC. I also referenced Google, W3Schools, MDN Webdocs, Day.js, Bootstrap, and ChatGPT. I also worked with a tutor, Trinh Nguyen, who helped me with some mistakes that I made.
 
 ## License
 
