@@ -8,6 +8,7 @@ I was given the challenge of creating a weather application that will run in the
 
 I created a weather application that runs in the browser. The app consists of a search box in the upper left corner to enter the name of the city. Once the name of the city is entered, the name, date and current forecast are shown in the center of the screen. Also, the 5-day forecast will appear in blue boxes underneath. I used a third-party API to access their data and functionality to dynamically update my HTML and CSS to populate all the forecast data.
 
+https://jaschmidt22.github.io/weather-dashboard/
 ![Alt text](assets/image.png)
 
 ## Credits
